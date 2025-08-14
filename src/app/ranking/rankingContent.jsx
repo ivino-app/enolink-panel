@@ -17,12 +17,12 @@ export default function RankingContent() {
 
     // Atualiza estatísticas sempre que o ranking muda
     useEffect(() => {
-        if (ranking.length === 0) {
+        if (ranking?.length === 0) {
             setStats({ totalWines: 0, totalParticipants: 0, averageRating: 0 });
             return;
         }
 
-        const totalWines = ranking.length;
+        const totalWines = ranking?.length;
         const totalParticipants = ranking.reduce((sum, w) => sum + (w.totalRatings || 0), 0);
         const averageRating = totalParticipants > 0 ? ranking.reduce((sum, w) => sum + (w.rating || 0) * (w.totalRatings || 0), 0) / totalParticipants : 0;
 
@@ -94,7 +94,7 @@ export default function RankingContent() {
             </div>
 
             {/* Top 3 */}
-            {top3.length > 0 && (
+            {top3?.length > 0 && (
                 <section className="flex justify-center gap-8 mb-12 px-4 flex-wrap">
                     {top3.map((wine, i) => (
                         <div key={wine.id} className={`text-center p-4 rounded-xl shadow-lg w-60 ${i === 0 ? "border-2 border-red-800" : ""}`}>
@@ -133,7 +133,7 @@ export default function RankingContent() {
             )}
 
             {/* Ranking Completo */}
-            {others.length > 0 && (
+            {others?.length > 0 && (
                 <section className="px-4 max-w-3xl mx-auto mb-16">
                     <h2 className="text-2xl font-bold mb-4">Ranking Completo</h2>
                     {others.map((wine, idx) => (
@@ -167,7 +167,7 @@ export default function RankingContent() {
             )}
 
             {/* Estado vazio */}
-            {ranking.length === 0 && !rankingLoading && (
+            {ranking?.length === 0 && !rankingLoading && (
                 <section className="text-center py-12">
                     <div className="text-6xl mb-4">🍷</div>
                     <h2 className="text-2xl font-bold mb-2">Ainda não há avaliações</h2>
