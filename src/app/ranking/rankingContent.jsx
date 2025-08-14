@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { FaStar, FaCrown, FaMedal } from "react-icons/fa";
 import { useRanking } from "@/hooks/useRanking";
 import { useEventData } from "@/hooks/useEventData";
-import { Button, Text, ButtonText, Heading, HStack, VStack, Box, Image, ScrollView, StarIcon, ButtonIcon, Center } from "@gluestack-ui/themed";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaCrown, FaMedal } from "react-icons/fa";
 
 export default function RankingContent() {
     const params = useParams();
@@ -34,6 +33,24 @@ export default function RankingContent() {
             console.error("Erro ao calcular estatísticas:", err);
         }
     }, [0]);
+    const StarRating = ({ rating }) => {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        return (
+            <div className="flex items-center gap-1">
+                {[...Array(fullStars)].map((_, i) => (
+                    <FaStar key={`full-${i}`} className="text-yellow-400" />
+                ))}
+                {hasHalfStar && <FaStarHalfAlt key="half" className="text-yellow-400" />}
+                {[...Array(emptyStars)].map((_, i) => (
+                    <FaRegStar key={`empty-${i}`} className="text-gray-300" />
+                ))}
+                <span className="ml-1 text-black font-medium">{rating.toFixed(1)}</span>
+            </div>
+        );
+    };
 
     const top3 = (ranking || []).slice(0, 3);
     const others = (ranking || []).slice(3);
@@ -132,17 +149,11 @@ export default function RankingContent() {
                                         <p className="text-sm text-gray-600">{wine.country || wine.region}</p>
                                         <div className="flex justify-center gap-1 my-2 text-yellow-400">
                                             {[...Array(5)].map((_, idx) => (
-                                                <StarIcon
-                                                    key={idx}
-                                                    size="md"
-                                                    fill={idx < Math.floor(wine.totalEvaluations) ? "$yellow500" : "$muted"}
-                                                    color={idx < Math.floor(wine.totalEvaluations) ? "$yellow500" : "$muted"}
-                                                    mr="$1"
-                                                />
+                                                <StarRating rating={wine.rating || 0} />
                                             ))}
                                         </div>
                                         <div className="text-sm text-gray-600 mb-2">
-                                            {wine.totalEvaluations || 0} avaliaç{wine.totalEvaluations != 1 ? "ões" : "ão"}
+                                            {wine.totalEvaluations || 0} avaliaç{wine.totalEvaluations > 1 ? "ões" : "ão"}
                                         </div>
                                         <div
                                             className={`mt-2 text-white font-bold rounded-full px-4 py-1 w-fit mx-auto ${
