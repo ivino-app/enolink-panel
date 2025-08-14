@@ -2,6 +2,17 @@
     "hosting": {
         "public": "out",
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-        "rewrites": [{ "source": "**", "destination": "/index.html" }]
+        "rewrites": [{ "source": "**", "destination": "/index.html" }],
+        "headers": [
+            {
+                "source": "**",
+                "headers": [
+                    {
+                        "key": "Access-Control-Allow-Origin",
+                        "value": "*"
+                    }
+                ]
+            }
+        ]
     }
 }
