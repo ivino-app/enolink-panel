@@ -134,7 +134,7 @@ export default function RankingContent() {
                                         ))}
                                     </div>
                                     <div className="text-sm text-gray-600 mb-2">
-                                        {wine.totalRatings || 0} avaliação{wine.totalRatings !== 1 ? "ões" : ""}
+                                        {wine.totalEvaluations || 0} avaliação{wine.totalEvaluations != 1 ? "ões" : ""}
                                     </div>
                                     <div
                                         className={`mt-2 text-white font-bold rounded-full px-4 py-1 w-fit mx-auto ${
