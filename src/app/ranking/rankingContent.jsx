@@ -4,17 +4,41 @@ import { useParams, useSearchParams } from "next/navigation";
 import { FaStar, FaCrown, FaMedal } from "react-icons/fa";
 import { useRanking } from "@/hooks/useRanking";
 import { useEventData } from "@/hooks/useEventData";
+import axios from "axios";
 
+const api = axios.create({
+    baseURL: "https://ivino-api.com/api",
+});
 export default function RankingContent() {
     const params = useParams();
     const searchParams = useSearchParams();
     const eventId = params?.eventId || searchParams?.get("eventId") || searchParams?.get("id") || "";
-    const { ranking, loading: rankingLoading } = useRanking(eventId);
+    const { loading: rankingLoading } = useRanking(eventId);
+    const [ranking, setRanking] = useState([]);
     console.log(ranking, `event  id`);
     const { eventData, loading: eventLoading } = useEventData(eventId);
     const [error, setError] = useState(null);
     const [stats, setStats] = useState({ totalWines: 0, totalParticipants: 0, averageRating: 0 });
 
+    useEffect(() => {
+        if (eventId) {
+            getRanking();
+        }
+    }, [ranking]);
+    async function getRanking() {
+        const url = "https://ivino-api.com/api";
+        const route = `/ranking/${eventId}/public`;
+
+        return await api
+            .get(url + route)
+            .then((response) => {
+                console.log(`sucesso: ${response.data}`);
+                setRanking(response.data);
+            })
+            .catch((error) => {
+                console.log(`deu ruim: ${error}`);
+            });
+    }
     // Atualiza estatísticas sempre que o ranking muda
     useEffect(() => {
         if (ranking?.length === 0) {
