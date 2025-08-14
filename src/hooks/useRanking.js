@@ -15,7 +15,7 @@ export function useRanking(eventId) {
             const q = query(collection(db, "wineRankings"), where("eventId", "==", eventId), orderBy("rating", "desc"));
             const snapshot = await getDocs(q);
             const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-            console.log(data, `DATA DATA DATA`);
+            console.log(JSON.stringify(data), `DATA DATA DATA`);
             setRanking(data);
         } catch (err) {
             console.error("Erro ao buscar ranking:", err);
