@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { FaStar, FaCrown, FaMedal } from "react-icons/fa";
 import { useRanking } from "@/hooks/useRanking";
 import { useEventData } from "@/hooks/useEventData";
+import { Button, Text, ButtonText, Heading, HStack, VStack, Box, Image, ScrollView, StarIcon, ButtonIcon, Center } from "@gluestack-ui/themed";
 
 export default function RankingContent() {
     const params = useParams();
@@ -131,7 +132,13 @@ export default function RankingContent() {
                                         <p className="text-sm text-gray-600">{wine.country || wine.region}</p>
                                         <div className="flex justify-center gap-1 my-2 text-yellow-400">
                                             {[...Array(5)].map((_, idx) => (
-                                                <FaStar key={idx} className={idx < Math.round(wine.rating || 0) ? "" : "text-gray-300"} />
+                                                <StarIcon
+                                                    key={idx}
+                                                    size="md"
+                                                    fill={idx < Math.floor(wine.totalEvaluations) ? "$yellow500" : "$muted"}
+                                                    color={idx < Math.floor(wine.totalEvaluations) ? "$yellow500" : "$muted"}
+                                                    mr="$1"
+                                                />
                                             ))}
                                         </div>
                                         <div className="text-sm text-gray-600 mb-2">
