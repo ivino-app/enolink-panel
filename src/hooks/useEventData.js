@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-
 export function useEventData(eventId) {
     const [eventData, setEventData] = useState(null);
     const [loading, setLoading] = useState(true);
