@@ -32,7 +32,7 @@ export default function RankingContent() {
             setError(err);
             console.error("Erro ao calcular estatísticas:", err);
         }
-    }, [ranking]);
+    }, [0]);
 
     const top3 = (ranking || []).slice(0, 3);
     const others = (ranking || []).slice(3);
