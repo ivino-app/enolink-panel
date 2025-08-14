@@ -9,8 +9,8 @@ export default function RankingContent() {
     const params = useParams();
     const searchParams = useSearchParams();
     const eventId = params?.eventId || searchParams?.get("eventId") || searchParams?.get("id") || "";
-    console.log(eventId, `event  id`);
     const { ranking, loading: rankingLoading } = useRanking(eventId);
+    console.log(ranking, `event  id`);
     const { eventData, loading: eventLoading } = useEventData(eventId);
     const [error, setError] = useState(null);
     const [stats, setStats] = useState({ totalWines: 0, totalParticipants: 0, averageRating: 0 });
