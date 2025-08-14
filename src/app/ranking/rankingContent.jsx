@@ -29,8 +29,8 @@ export default function RankingContent() {
         setStats({ totalWines, totalParticipants, averageRating });
     }, [ranking]);
 
-    const top3 = ranking.slice(0, 3);
-    const others = ranking.slice(3);
+    const top3 = (ranking || []).slice(0, 3);
+    const others = (ranking || []).slice(3);
 
     if (rankingLoading || eventLoading) {
         return (
