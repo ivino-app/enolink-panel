@@ -5,8 +5,9 @@ const nextConfig: NextConfig = {
         // Desabilita o botão de ferramentas de dev do App Router
         nextScriptWorkers: false,
     },
-    devIndicators: {
-        buildActivity: false, // remove ícone "building..."
+    output: "export", // Novo jeito de exportar estático
+    images: {
+        unoptimized: true, // Necessário para export estático
     },
 };
 
