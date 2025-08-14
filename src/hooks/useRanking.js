@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export function useRanking(eventId) {
@@ -12,7 +12,7 @@ export function useRanking(eventId) {
         if (!eventId) return;
         setLoading(true);
         try {
-            const q = query(collection(db, "wineRankings"), where("eventId", "==", eventId), orderBy("rating", "desc"));
+            const q = query(collection(db, "wineRankings"), where("eventId", "==", eventId));
             const snapshot = await getDocs(q);
             const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
             console.log(JSON.stringify(data), `DATA DATA DATA`);
