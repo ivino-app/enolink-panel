@@ -37,7 +37,7 @@ export default function RankingContent() {
     const top3 = (ranking || []).slice(0, 3);
     const others = (ranking || []).slice(3);
 
-    if (rankingLoading || eventLoading) {
+    if (rankingLoading && eventLoading) {
         return (
             <main className="min-h-screen flex items-center justify-center">
                 <p className="text-gray-600 text-xl">Carregando ranking...</p>
