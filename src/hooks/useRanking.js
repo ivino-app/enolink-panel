@@ -9,6 +9,7 @@ export function useRanking(eventId) {
     const [loading, setLoading] = useState(true);
 
     const getRanking = async () => {
+        console.log(eventId);
         if (!eventId) return;
         setLoading(true);
         try {

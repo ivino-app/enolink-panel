@@ -9,7 +9,7 @@ export default function RankingContent() {
     const params = useParams();
     const searchParams = useSearchParams();
     const eventId = params?.eventId || searchParams?.get("eventId") || searchParams?.get("id") || "";
-
+    console.log(eventId, `event  id`);
     const { ranking, loading: rankingLoading } = useRanking(eventId);
     const { eventData, loading: eventLoading } = useEventData(eventId);
     const [error, setError] = useState(null);
@@ -181,7 +181,7 @@ export default function RankingContent() {
             )}
 
             {/* Rodapé */}
-            <footer className="bg-[#0F0F1B] text-white text-center py-8">
+            <footer className="bg-[#0F0F1B] text-white text-center py-8 absolute bottom-0">
                 <div className="text-xl mb-2">🍷 EnoLink</div>
                 <p className="text-sm text-gray-300 mb-4">Conectando apreciadores de vinho através de experiências autênticas de degustação</p>
                 <button className="bg-red-800 px-6 py-2 rounded hover:opacity-90 text-sm">📱 Baixar App</button>
