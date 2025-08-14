@@ -12,7 +12,7 @@ export default function RankingContent() {
 
     const { ranking, loading: rankingLoading } = useRanking(eventId);
     const { eventData, loading: eventLoading } = useEventData(eventId);
-
+    const [error, setError] = useState(null);
     const [stats, setStats] = useState({ totalWines: 0, totalParticipants: 0, averageRating: 0 });
 
     // Atualiza estatísticas sempre que o ranking muda
@@ -22,11 +22,16 @@ export default function RankingContent() {
             return;
         }
 
-        const totalWines = ranking?.length;
-        const totalParticipants = ranking.reduce((sum, w) => sum + (w.totalRatings || 0), 0);
-        const averageRating = totalParticipants > 0 ? ranking.reduce((sum, w) => sum + (w.rating || 0) * (w.totalRatings || 0), 0) / totalParticipants : 0;
+        try {
+            const totalWines = ranking?.length;
+            const totalParticipants = ranking?.reduce((sum, w) => sum + (w.totalRatings || 0), 0) || 0;
+            const averageRating = totalParticipants > 0 ? ranking?.reduce((sum, w) => sum + (w.rating || 0) * (w.totalRatings || 0), 0) / totalParticipants : 0;
 
-        setStats({ totalWines, totalParticipants, averageRating });
+            setStats({ totalWines, totalParticipants, averageRating });
+        } catch (err) {
+            setError(err);
+            console.error("Erro ao calcular estatísticas:", err);
+        }
     }, [ranking]);
 
     const top3 = (ranking || []).slice(0, 3);

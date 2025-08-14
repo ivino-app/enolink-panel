@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export function useEventData(eventId) {
@@ -8,11 +7,11 @@ export function useEventData(eventId) {
 
     useEffect(() => {
         if (!eventId) return;
+
         const fetchEvent = async () => {
             setLoading(true);
             try {
-                const docRef = await db.collection("events").doc(eventId).get();
-                // const docRef = doc(db, "events", eventId);
+                const docRef = doc(db, "events", eventId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     setEventData(docSnap.data());
@@ -22,6 +21,7 @@ export function useEventData(eventId) {
             }
             setLoading(false);
         };
+
         fetchEvent();
     }, [eventId]);
 

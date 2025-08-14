@@ -2,14 +2,32 @@
     "hosting": {
         "public": "out",
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-        "rewrites": [{ "source": "**", "destination": "/index.html" }],
-        "headers": [
+        "rewrites": [
+            {
+                "source": "/.well-known/**",
+                "destination": "/.well-known/**"
+            },
             {
                 "source": "**",
+                "destination": "/index.html"
+            }
+        ],
+        "headers": [
+            {
+                "source": "/.well-known/apple-app-site-association",
                 "headers": [
                     {
-                        "key": "Access-Control-Allow-Origin",
-                        "value": "*"
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ]
+            },
+            {
+                "source": "/.well-known/assetlinks.json",
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
                     }
                 ]
             }

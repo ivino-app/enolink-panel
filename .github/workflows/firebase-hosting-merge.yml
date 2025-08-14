@@ -3,18 +3,28 @@
 
 name: Deploy to Firebase Hosting on merge
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IVINO_APP }}
-          channelId: live
-          projectId: ivino-app
+    build_and_deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 20 # ou a versão que seu projeto usa
+
+            # Instalar dependências
+            - run: npm ci
+
+            # Build do Next.js
+            - run: npm run build
+
+            # Deploy para Firebase Hosting
+            - uses: FirebaseExtended/action-hosting-deploy@v0
+              with:
+                  repoToken: ${{ secrets.GITHUB_TOKEN }}
+                  firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IVINO_APP }}
+                  channelId: live
+                  projectId: ivino-app
