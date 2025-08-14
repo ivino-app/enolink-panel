@@ -172,14 +172,13 @@ export default function RankingContent() {
             )}
 
             {/* Estado vazio */}
-            {ranking?.length ===
-                0(
-                    <section className="text-center py-12">
-                        <div className="text-6xl mb-4">🍷</div>
-                        <h2 className="text-2xl font-bold mb-2">Ainda não há avaliações</h2>
-                        <p className="text-gray-600">Os participantes ainda não avaliaram os vinhos deste evento.</p>
-                    </section>
-                )}
+            {ranking?.length == 0 && (
+                <section className="text-center py-12">
+                    <div className="text-6xl mb-4">🍷</div>
+                    <h2 className="text-2xl font-bold mb-2">Ainda não há avaliações</h2>
+                    <p className="text-gray-600">Os participantes ainda não avaliaram os vinhos deste evento.</p>
+                </section>
+            )}
 
             {/* Rodapé */}
             <footer className="bg-[#0F0F1B] text-white text-center py-8 absolute bottom-0 w-full">
