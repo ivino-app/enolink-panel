@@ -100,63 +100,24 @@ export default function RankingContent() {
 
             {top3?.length > 0 && (
                 <div className="overflow-y-auto">
-                    {/* Top 3 */}
-                    {top3?.length > 0 && (
-                        <section className="flex justify-center gap-8 mb-12 px-4 flex-wrap">
-                            {top3.map((wine, i) => (
-                                <div key={wine.id} className={`text-center p-4 rounded-xl shadow-lg w-60 ${i === 0 ? "border-2 border-red-800" : ""}`}>
-                                    <div className="text-4xl mb-2">
-                                        {i === 0 ? (
-                                            <FaCrown className="text-red-800 mx-auto" />
-                                        ) : i === 1 ? (
-                                            <FaMedal className="text-gray-400 mx-auto" />
-                                        ) : (
-                                            <FaMedal className="text-orange-300 mx-auto" />
-                                        )}
-                                    </div>
-
-                                    {wine.image && (
-                                        <div className="w-16 h-24 mx-auto mb-2 relative">
-                                            <img
-                                                src={wine.image}
-                                                alt={wine.name}
-                                                className="w-full h-full object-contain"
-                                                onError={(e) => (e.currentTarget.style.display = "none")}
-                                            />
+                    <ul class="space-y-2">
+                        {/* Top 3 */}
+                        {top3?.length > 0 && (
+                            <section className="flex justify-center gap-8 mb-12 px-4 flex-wrap">
+                                {top3.map((wine, i) => (
+                                    <div key={wine.id} className={`text-center p-4 rounded-xl shadow-lg w-60 ${i === 0 ? "border-2 border-red-800" : ""}`}>
+                                        <div className="text-4xl mb-2">
+                                            {i === 0 ? (
+                                                <FaCrown className="text-red-800 mx-auto" />
+                                            ) : i === 1 ? (
+                                                <FaMedal className="text-gray-400 mx-auto" />
+                                            ) : (
+                                                <FaMedal className="text-orange-300 mx-auto" />
+                                            )}
                                         </div>
-                                    )}
 
-                                    <h3 className="text-lg font-semibold">{wine.name}</h3>
-                                    <p className="text-sm text-gray-600">{wine.country || wine.region}</p>
-                                    <div className="flex justify-center gap-1 my-2 text-yellow-400">
-                                        {[...Array(5)].map((_, idx) => (
-                                            <FaStar key={idx} className={idx < Math.round(wine.rating || 0) ? "" : "text-gray-300"} />
-                                        ))}
-                                    </div>
-                                    <div className="text-sm text-gray-600 mb-2">
-                                        {wine.totalEvaluations || 0} avaliação{wine.totalEvaluations != 1 ? "ões" : ""}
-                                    </div>
-                                    <div
-                                        className={`mt-2 text-white font-bold rounded-full px-4 py-1 w-fit mx-auto ${
-                                            i === 0 ? "bg-red-800" : i === 1 ? "bg-gray-400" : "bg-orange-300"
-                                        }`}
-                                    >
-                                        #{i + 1}
-                                    </div>
-                                </div>
-                            ))}
-                        </section>
-                    )}
-
-                    {/* Ranking Completo */}
-                    {others?.length > 0 && (
-                        <section className="px-4 max-w-3xl mx-auto mb-16">
-                            <h2 className="text-2xl font-bold mb-4">Ranking Completo</h2>
-                            {others.map((wine, idx) => (
-                                <div key={wine.id} className="flex justify-between items-center p-4 border rounded-lg mb-3 shadow-sm">
-                                    <div className="flex items-center gap-4">
                                         {wine.image && (
-                                            <div className="w-12 h-16 flex-shrink-0">
+                                            <div className="w-16 h-24 mx-auto mb-2 relative">
                                                 <img
                                                     src={wine.image}
                                                     alt={wine.name}
@@ -165,27 +126,68 @@ export default function RankingContent() {
                                                 />
                                             </div>
                                         )}
-                                        <div>
-                                            <div className="font-semibold">
-                                                #{idx + 4} {wine.name}
-                                            </div>
-                                            <div className="text-sm text-gray-600">{wine.country || wine.region}</div>
-                                            <div className="text-xs text-gray-500">
-                                                {wine.totalRatings || 0} avaliação
-                                                {wine.totalRatings !== 1 ? "ões" : ""}
-                                            </div>
+
+                                        <h3 className="text-lg font-semibold">{wine.name}</h3>
+                                        <p className="text-sm text-gray-600">{wine.country || wine.region}</p>
+                                        <div className="flex justify-center gap-1 my-2 text-yellow-400">
+                                            {[...Array(5)].map((_, idx) => (
+                                                <FaStar key={idx} className={idx < Math.round(wine.rating || 0) ? "" : "text-gray-300"} />
+                                            ))}
+                                        </div>
+                                        <div className="text-sm text-gray-600 mb-2">
+                                            {wine.totalEvaluations || 0} avaliação{wine.totalEvaluations != 1 ? "ões" : ""}
+                                        </div>
+                                        <div
+                                            className={`mt-2 text-white font-bold rounded-full px-4 py-1 w-fit mx-auto ${
+                                                i === 0 ? "bg-red-800" : i === 1 ? "bg-gray-400" : "bg-orange-300"
+                                            }`}
+                                        >
+                                            #{i + 1}
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1 text-yellow-400">
-                                        {[...Array(5)].map((_, i) => (
-                                            <FaStar key={i} className={i < Math.round(wine.rating || 0) ? "" : "text-gray-300"} />
-                                        ))}
-                                        <span className="ml-2 text-black font-medium">{(wine.rating || 0).toFixed(1)}</span>
+                                ))}
+                            </section>
+                        )}
+
+                        {/* Ranking Completo */}
+                        {others?.length > 0 && (
+                            <section className="px-4 max-w-3xl mx-auto mb-16">
+                                <h2 className="text-2xl font-bold mb-4">Ranking Completo</h2>
+                                {others.map((wine, idx) => (
+                                    <div key={wine.id} className="flex justify-between items-center p-4 border rounded-lg mb-3 shadow-sm">
+                                        <div className="flex items-center gap-4">
+                                            {wine.image && (
+                                                <div className="w-12 h-16 flex-shrink-0">
+                                                    <img
+                                                        src={wine.image}
+                                                        alt={wine.name}
+                                                        className="w-full h-full object-contain"
+                                                        onError={(e) => (e.currentTarget.style.display = "none")}
+                                                    />
+                                                </div>
+                                            )}
+                                            <div>
+                                                <div className="font-semibold">
+                                                    #{idx + 4} {wine.name}
+                                                </div>
+                                                <div className="text-sm text-gray-600">{wine.country || wine.region}</div>
+                                                <div className="text-xs text-gray-500">
+                                                    {wine.totalRatings || 0} avaliação
+                                                    {wine.totalRatings !== 1 ? "ões" : ""}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-1 text-yellow-400">
+                                            {[...Array(5)].map((_, i) => (
+                                                <FaStar key={i} className={i < Math.round(wine.rating || 0) ? "" : "text-gray-300"} />
+                                            ))}
+                                            <span className="ml-2 text-black font-medium">{(wine.rating || 0).toFixed(1)}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </section>
-                    )}
+                                ))}
+                            </section>
+                        )}
+                    </ul>
                 </div>
             )}
 
