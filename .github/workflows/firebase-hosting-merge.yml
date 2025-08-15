@@ -28,7 +28,3 @@ jobs:
                   firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IVINO_APP }}
                   channelId: live
                   projectId: ivino-app
-                  - name: Install dependencies
-                  run: |
-                    npm install
-                    npm rebuild --platform=linux --arch=x64 --target=node_version
