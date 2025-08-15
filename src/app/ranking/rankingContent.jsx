@@ -155,10 +155,10 @@ export default function RankingContent() {
                                         <h3 className="text-lg font-semibold">{wine.name}</h3>
                                         <p className="text-sm text-gray-600">{wine.country || wine.region}</p>
                                         <div className="flex justify-center my-2">
-                                            <StarRating rating={wine.rating || 0} />
+                                            <StarRating rating={wine.totalRating || 0} />
                                         </div>
                                         <div className="text-sm text-gray-600 mb-2">
-                                            {wine.totalRatings || 0} avalia{wine.totalRatings != 1 ? "ões" : "ção"}
+                                            {wine.totalEvaluations || 0} avalia{wine.totalEvaluations != 1 ? "ões" : "ção"}
                                         </div>
                                         <div
                                             className={`mt-2 text-white font-bold rounded-full px-4 py-1 w-fit mx-auto ${
