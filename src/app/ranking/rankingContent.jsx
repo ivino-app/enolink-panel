@@ -1,9 +1,34 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { FaStar, FaCrown, FaMedal, FaRegStarHalf } from "react-icons/fa";
+import { FaStar, FaCrown, FaMedal, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { useRanking } from "@/hooks/useRanking";
 import { useEventData } from "@/hooks/useEventData";
+
+// Componente auxiliar para renderizar as estrelas
+const StarRating = ({ rating }) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    // Adiciona estrelas cheias
+    for (let i = 0; i < fullStars; i++) {
+        stars.push(<FaStar key={`full-${i}`} className="text-yellow-400" />);
+    }
+
+    // Adiciona meia estrela se necessário
+    if (hasHalfStar) {
+        stars.push(<FaStarHalfAlt key="half" className="text-yellow-400" />);
+    }
+
+    // Adiciona estrelas vazias
+    const emptyStars = 5 - stars.length;
+    for (let i = 0; i < emptyStars; i++) {
+        stars.push(<FaRegStar key={`empty-${i}`} className="text-yellow-400" />);
+    }
+
+    return <div className="flex gap-1">{stars}</div>;
+};
 
 export default function RankingContent() {
     const params = useParams();
@@ -129,13 +154,11 @@ export default function RankingContent() {
 
                                         <h3 className="text-lg font-semibold">{wine.name}</h3>
                                         <p className="text-sm text-gray-600">{wine.country || wine.region}</p>
-                                        <div className="flex justify-center gap-1 my-2 text-yellow-400">
-                                            {[...Array(5)].map((_, idx) => (
-                                                <FaStar key={idx} className={idx < Math.round(wine.totalEvaluations || 0) ? "" : "text-gray-300"} />
-                                            ))}
+                                        <div className="flex justify-center my-2">
+                                            <StarRating rating={wine.rating || 0} />
                                         </div>
                                         <div className="text-sm text-gray-600 mb-2">
-                                            {wine.totalEvaluations || 0} avalia{wine.totalEvaluations != 1 ? "ões" : "ção"}
+                                            {wine.totalRatings || 0} avalia{wine.totalRatings != 1 ? "ões" : "ção"}
                                         </div>
                                         <div
                                             className={`mt-2 text-white font-bold rounded-full px-4 py-1 w-fit mx-auto ${
@@ -177,10 +200,8 @@ export default function RankingContent() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-1 text-yellow-400">
-                                            {[...Array(5)].map((_, i) => (
-                                                <FaStar key={i} className={i < Math.round(wine.rating || 0) ? "" : "text-gray-300"} />
-                                            ))}
+                                        <div className="flex items-center gap-2">
+                                            <StarRating rating={wine.rating || 0} />
                                             <span className="ml-2 text-black font-medium">{(wine.rating || 0).toFixed(1)}</span>
                                         </div>
                                     </div>
