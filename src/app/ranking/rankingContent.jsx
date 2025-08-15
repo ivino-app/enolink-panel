@@ -40,7 +40,6 @@ export default function RankingContent() {
     const [error, setError] = useState(null);
     const [stats, setStats] = useState({ totalWines: 0, totalParticipants: 0, averageRating: 0 });
 
-    // Atualiza estatísticas sempre que o ranking muda
     useEffect(() => {
         if (ranking?.length === 0) {
             setStats({ totalWines: 0, totalParticipants: 0, averageRating: 0 });
@@ -48,17 +47,29 @@ export default function RankingContent() {
         }
 
         try {
-            const totalWines = ranking?.length;
-            const totalParticipants = ranking?.reduce((sum, w) => sum + (w.totalRatings || 0), 0) || 0;
-            const averageRating = totalParticipants > 0 ? ranking?.reduce((sum, w) => sum + (w.rating || 0) * (w.totalRatings || 0), 0) / totalParticipants : 0;
+            const totalWines = ranking?.length || 0;
 
-            setStats({ totalWines, totalParticipants, averageRating });
+            // Soma de todas as avaliações (totalEvaluations)
+            const totalParticipants = ranking?.reduce((sum, wine) => sum + (wine.totalEvaluations || 0), 0) || 0;
+
+            // Cálculo da média ponderada
+            let sumRatings = 0;
+            ranking?.forEach((wine) => {
+                sumRatings += (wine.rating || 0) * (wine.totalEvaluations || 0);
+            });
+
+            const averageRating = totalParticipants > 0 ? sumRatings / totalParticipants : 0;
+
+            setStats({
+                totalWines,
+                totalParticipants,
+                averageRating: parseFloat(averageRating.toFixed(1)),
+            });
         } catch (err) {
             setError(err);
             console.error("Erro ao calcular estatísticas:", err);
         }
-    }, [0]);
-
+    }, [ranking]); // Certifique-se de que está observando ranking
     const top3 = (ranking || []).slice(0, 3);
     const others = (ranking || []).slice(3);
 
