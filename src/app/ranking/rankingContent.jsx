@@ -47,29 +47,32 @@ export default function RankingContent() {
         }
 
         try {
-            const totalWines = ranking?.length || 0;
+            const totalWines = ranking?.length;
 
-            // Soma de todas as avaliações (totalEvaluations)
-            const totalParticipants = ranking?.reduce((sum, wine) => sum + (wine.totalEvaluations || 0), 0) || 0;
+            // Converter totalEvaluations para número e somar todas as avaliações
+            const totalParticipants =
+                ranking?.reduce((sum, wine) => {
+                    const evaluations = parseInt(wine.totalEvaluations) || 0;
+                    return sum + evaluations;
+                }, 0) || 0;
 
-            // Cálculo da média ponderada
-            let sumRatings = 0;
-            ranking?.forEach((wine) => {
-                sumRatings += (wine.rating || 0) * (wine.totalEvaluations || 0);
-            });
-
-            const averageRating = totalParticipants > 0 ? sumRatings / totalParticipants : 0;
+            // Calcular a média ponderada das avaliações
+            const averageRating =
+                ranking?.reduce((sum, wine) => {
+                    const evaluations = parseInt(wine.totalEvaluations) || 0;
+                    return sum + (wine.totalRating || 0) * evaluations;
+                }, 0) / totalParticipants || 0;
 
             setStats({
                 totalWines,
                 totalParticipants,
-                averageRating: parseFloat(averageRating.toFixed(1)),
+                averageRating: isNaN(averageRating) ? 0 : averageRating,
             });
         } catch (err) {
             setError(err);
             console.error("Erro ao calcular estatísticas:", err);
         }
-    }, [ranking]); // Certifique-se de que está observando ranking
+    }, [ranking]);
     const top3 = (ranking || []).slice(0, 3);
     const others = (ranking || []).slice(3);
 
