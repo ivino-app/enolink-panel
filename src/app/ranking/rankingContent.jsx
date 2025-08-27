@@ -1,27 +1,23 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { FaStar, FaCrown, FaMedal, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+import { FaStar, FaCrown, FaMedal, FaRegStar, FaStarHalfAlt, FaShare, FaDownload } from "react-icons/fa";
 import { useRanking } from "@/hooks/useRanking";
 import { useEventData } from "@/hooks/useEventData";
 
-// Componente auxiliar para renderizar as estrelas
 const StarRating = ({ rating }) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
 
-    // Adiciona estrelas cheias
     for (let i = 0; i < fullStars; i++) {
         stars.push(<FaStar key={`full-${i}`} className="text-yellow-400" />);
     }
 
-    // Adiciona meia estrela se necessário
     if (hasHalfStar) {
         stars.push(<FaStarHalfAlt key="half" className="text-yellow-400" />);
     }
 
-    // Adiciona estrelas vazias
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
         stars.push(<FaRegStar key={`empty-${i}`} className="text-yellow-400" />);
@@ -35,10 +31,10 @@ export default function RankingContent() {
     const searchParams = useSearchParams();
     const eventId = params?.eventId || searchParams?.get("eventId") || searchParams?.get("id") || "";
     const { ranking, loading: rankingLoading } = useRanking(eventId);
-    console.log(ranking, `event  id`);
     const { eventData, loading: eventLoading } = useEventData(eventId);
     const [error, setError] = useState(null);
     const [stats, setStats] = useState({ totalWines: 0, totalParticipants: 0, averageRating: 0 });
+    const [showShareOptions, setShowShareOptions] = useState(false);
 
     useEffect(() => {
         if (ranking?.length === 0) {
@@ -73,8 +69,57 @@ export default function RankingContent() {
             console.error("Erro ao calcular estatísticas:", err);
         }
     }, [ranking]);
+
     const top3 = (ranking || []).slice(0, 3);
     const others = (ranking || []).slice(3);
+
+    const shareRanking = async () => {
+        const rankingUrl = window.location.href;
+        const shareText = `🍷 Confira o ranking do evento "${eventData?.name || "de degustação de vinhos"}" no EnoLink!\n\n${rankingUrl}`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `Ranking - ${eventData?.name || "EnoLink"}`,
+                    text: shareText,
+                    url: rankingUrl,
+                });
+            } catch (error) {
+                console.log("Compartilhamento cancelado ou não suportado");
+                copyToClipboard(rankingUrl);
+            }
+        } else {
+            copyToClipboard(rankingUrl);
+        }
+    };
+
+    const copyToClipboard = async (text) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            alert("Link copiado para a área de transferência!");
+        } catch (error) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            alert("Link copiado para a área de transferência!");
+        }
+    };
+
+    const downloadApp = () => {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isAndroid = /Android/.test(navigator.userAgent);
+
+        if (isIOS) {
+            window.location.href = "https://testflight.apple.com/join/id6749034865";
+        } else if (isAndroid) {
+            window.location.href = "https://play.google.com/store/apps/details?id=com.vivavinho.enolink&hl=pt_BR";
+        } else {
+            window.open("https://come-to-enolink/invite", "_blank");
+        }
+    };
 
     if (rankingLoading && eventLoading) {
         return (
@@ -108,7 +153,10 @@ export default function RankingContent() {
                     <div className="font-semibold">{eventData?.name || "Carregando..."}</div>
                     <div className="text-gray-300">{eventData?.location || ""}</div>
                 </div>
-                <button className="bg-red-800 px-4 py-2 rounded text-sm hover:opacity-80">Compartilhar</button>
+                <button onClick={shareRanking} className="bg-red-800 px-4 py-2 rounded text-sm hover:opacity-80 flex items-center gap-2">
+                    <FaShare size={14} />
+                    Compartilhar
+                </button>
             </header>
             <div className="h-20" />
 
@@ -139,7 +187,7 @@ export default function RankingContent() {
 
             {top3?.length > 0 && (
                 <div className="overflow-y-auto">
-                    <ul class="space-y-2">
+                    <ul className="space-y-2">
                         {/* Top 3 */}
                         {top3?.length > 0 && (
                             <section className="flex justify-center gap-8 mb-12 px-4 flex-wrap">
@@ -236,10 +284,45 @@ export default function RankingContent() {
             )}
 
             {/* Rodapé */}
-            <footer className="bg-[#0F0F1B] text-white text-center py-8 absolute bottom-0 w-full">
+            <footer className="bg-[#0F0F1B] text-white text-center py-8 w-full mt-16">
                 <div className="text-xl mb-2">🍷 EnoLink</div>
-                <p className="text-sm text-gray-300 mb-4">Conectando apreciadores de vinho através de experiências autênticas de degustação</p>
-                <button className="bg-red-800 px-6 py-2 rounded hover:opacity-90 text-sm">📱 Baixar App</button>
+                <p className="text-sm text-gray-300 mb-6">Conectando apreciadores de vinho através de experiências autênticas de degustação</p>
+                <button onClick={downloadApp} className="bg-red-800 px-6 py-3 rounded hover:opacity-90 text-sm flex items-center justify-center gap-2 mx-auto">
+                    <FaDownload size={16} />
+                    Baixar App
+                </button>
+
+                {/* Modal de opções de compartilhamento (aparece quando showShareOptions é true) */}
+                {showShareOptions && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
+                            <h3 className="text-lg font-semibold mb-4">Compartilhar Ranking</h3>
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => {
+                                        shareRanking();
+                                        setShowShareOptions(false);
+                                    }}
+                                    className="w-full bg-red-800 text-white py-2 rounded hover:opacity-90"
+                                >
+                                    Compartilhar via...
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        copyToClipboard(window.location.href);
+                                        setShowShareOptions(false);
+                                    }}
+                                    className="w-full border border-gray-300 py-2 rounded hover:bg-gray-100"
+                                >
+                                    Copiar Link
+                                </button>
+                                <button onClick={() => setShowShareOptions(false)} className="w-full border border-gray-300 py-2 rounded hover:bg-gray-100">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </footer>
         </main>
     );
